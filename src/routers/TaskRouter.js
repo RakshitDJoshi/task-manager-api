@@ -5,15 +5,15 @@ const Task = require('../models/Task')
 const router = new express.Router()
 
 router.post('/tasks', auth, async (req, res) => {
-     const newTask = new Task({
+     const task = new Task({
         // copy all properties from req.body
         ...req.body,
         owner: req.user._id
     })
 
     try {
-        await newTask.save()
-        res.status(201).send(newTask)
+        await task.save()
+        res.status(201).send(task)
     } catch (error) {
         res.status(400).send(error)
     }

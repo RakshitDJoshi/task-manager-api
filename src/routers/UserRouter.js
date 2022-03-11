@@ -7,13 +7,13 @@ const auth = require('../middleware/auth')
 const router = new express.Router()
 
 router.post('/users', async (req, res) => {
-    const newUser = new User(req.body)
+    const user = new User(req.body)
 
     try {
-        await newUser.save()
-        const token = await newUser.generateAuthToken()
+        await user.save()
+        const token = await user.generateAuthToken()
 
-        res.status(201).send({newUser, token})
+        res.status(201).send({user, token})
     } catch (error) {
         res.status(400).send(error)
     }
@@ -103,7 +103,7 @@ const upload = multer({
 })
 
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
-    const buffer = await sharp(req.user.avatar).resize({width: 250, height:250}).png().toBuffer()
+    const buffer = await sharp(req.file.buffer).resize({width: 250, height:250}).png().toBuffer()
     req.user.avatar = buffer
     await req.user.save()
     res.send()
